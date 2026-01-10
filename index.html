@@ -1,513 +1,247 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Get a website that sells — E‑commerce & Brand Sites for DTC Brands</title>
-  <meta name="description" content="Solo designer building fast, conversion-focused e-commerce and brand websites for small and mid-size DTC brands. Fast turnaround, direct communication, measurable outcomes." />
-  <style>
-    /* CSS Variables: colors, spacing, type scale */
-    :root{
-      --bg: #fbfbf9; /* off-white */
-      --card: #ffffff;
-      --text: #0f1720; /* very dark */
-      --muted: #4b5563;
-      --accent: #0b7285; /* deep teal accent */
-      --accent-contrast: #ffffff;
-      --radius: 12px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Conversion Systems for DTC Brands — Clive Rodrigues</title>
 
-      --space-1: 8px;
-      --space-2: 16px;
-      --space-3: 24px;
-      --space-4: 40px;
-      --space-5: 64px;
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-      --max-width: 1100px;
-      --container-pad: 20px;
-
-      --fw-regular: 400;
-      --fw-medium: 600;
-      --fw-bold: 700;
-
-      --shadow-soft: 0 6px 18px rgba(16,24,32,0.06);
+  <!-- Tailwind config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#0b7285',
+          },
+        },
+      },
     }
-
-    /* Base reset + typography */
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      line-height:1.45;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      -webkit-text-size-adjust:100%;
-      padding-bottom: var(--space-5);
-    }
-
-    a{color:inherit; text-decoration:none}
-    img{max-width:100%; height:auto; display:block}
-
-    /* Layout */
-    .wrap{max-width:var(--max-width); margin:0 auto; padding: 0 var(--container-pad);}
-
-    header{
-      padding: var(--space-3) 0;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      font-weight:var(--fw-medium);
-      font-size:0.98rem;
-      color:var(--text);
-    }
-    .logo{
-      width:40px; height:40px;
-      display:inline-grid; place-items:center;
-      background:linear-gradient(180deg,var(--accent), #057985);
-      color:var(--accent-contrast);
-      border-radius:8px;
-      font-weight:700;
-      font-size:1rem;
-      box-shadow:var(--shadow-soft);
-    }
-    nav a{
-      font-size:0.95rem;
-      color:var(--muted);
-      margin-left:18px;
-    }
-
-    main{margin-top: var(--space-2);}
-
-    /* Hero */
-    .hero{
-      padding: var(--space-4) 0;
-      display:grid;
-      gap:var(--space-3);
-      align-items:center;
-    }
-    .hero-grid{display:grid; gap:var(--space-3)}
-    .kicker{
-      display:inline-block;
-      background:rgba(11,114,133,0.08);
-      color:var(--accent);
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:0.85rem;
-      font-weight:600;
-      width:max-content;
-    }
-    h1{
-      margin:0;
-      font-size:1.6rem;
-      line-height:1.05;
-      letter-spacing:-0.01em;
-      font-weight:700;
-    }
-    p.lead{
-      margin:0;
-      color:var(--muted);
-      font-size:1rem;
-      max-width:62ch;
-    }
-    .hero-ctas{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top: var(--space-2);
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:12px 16px;
-      border-radius:10px;
-      font-weight:600;
-      cursor:pointer;
-      border:0;
-    }
-    .btn-primary{
-      background:var(--accent);
-      color:var(--accent-contrast);
-      box-shadow: 0 6px 18px rgba(11,114,133,0.12);
-    }
-    .btn-ghost{
-      background:transparent;
-      color:var(--text);
-      border:1px solid rgba(15,23,32,0.06);
-    }
-
-    /* Services */
-    section{padding: var(--space-4) 0; border-top:1px solid rgba(15,23,32,0.03)}
-    .section-title{display:flex; align-items:baseline; justify-content:space-between; gap:12px}
-    .h2{font-size:1.1rem; font-weight:700; margin:0}
-    .grid{
-      display:grid;
-      gap:var(--space-3);
-      margin-top:var(--space-3);
-    }
-
-    .services-grid{
-      grid-template-columns: 1fr;
-    }
-    .service{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:var(--space-3);
-      box-shadow:var(--shadow-soft);
-    }
-    .service h3{margin:0 0 8px 0; font-size:1rem}
-    .service p{margin:0; color:var(--muted); font-size:0.95rem}
-
-    /* Work */
-    .work-grid{grid-template-columns:1fr; gap:var(--space-3)}
-    .project{
-      display:grid;
-      grid-template-columns: 112px 1fr;
-      gap:12px;
-      align-items:center;
-    }
-    .thumb{
-      width:112px; height:72px;
-      border-radius:8px;
-      background:linear-gradient(180deg,rgba(11,114,133,0.12), rgba(11,114,133,0.06));
-      display:flex; align-items:center; justify-content:center;
-      color:var(--accent);
-      font-weight:700;
-      font-size:0.92rem;
-      border:1px solid rgba(11,114,133,0.06);
-    }
-    .project h4{margin:0; font-size:0.98rem}
-    .meta{color:var(--muted); font-size:0.92rem; margin-top:6px}
-
-    /* Process */
-    .steps{display:grid; gap:var(--space-2)}
-    .step{
-      background:var(--card);
-      padding:var(--space-2);
-      border-radius:12px;
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      box-shadow:var(--shadow-soft);
-    }
-    .step .n{width:36px;height:36px;border-radius:8px;background:rgba(11,114,133,0.06);display:grid;place-items:center;color:var(--accent);font-weight:700}
-
-    /* Why choose me */
-    .why{display:grid; gap:var(--space-3)}
-    .why-list{display:grid; gap:var(--space-2)}
-
-    /* Contact */
-    .contact-card{
-      background:var(--card);
-      padding:var(--space-3);
-      border-radius:var(--radius);
-      display:flex;
-      gap:var(--space-3);
-      align-items:center;
-      box-shadow:var(--shadow-soft);
-      flex-wrap:wrap;
-    }
-    .contact-links{display:flex; gap:12px; flex-wrap:wrap}
-    .small{font-size:0.9rem; color:var(--muted)}
-
-    /* Footer */
-    footer{margin-top:var(--space-4); color:var(--muted); font-size:0.9rem; text-align:center}
-
-    /* Responsive: larger screens */
-    @media (min-width:720px){
-      .hero{grid-template-columns:1fr 420px; align-items:center}
-      h1{font-size:2.1rem}
-      .services-grid{grid-template-columns:repeat(2,1fr)}
-      .work-grid{grid-template-columns:repeat(2,1fr)}
-      .steps{grid-template-columns:repeat(2,1fr)}
-      .why{grid-template-columns: 1fr 1fr}
-    }
-    @media (min-width:1024px){
-      .wrap{padding: 0 32px}
-      .hero-grid{max-width:60ch}
-      .services-grid{grid-template-columns: repeat(3,1fr)}
-      .work-grid{grid-template-columns: repeat(3,1fr)}
-      .steps{grid-template-columns: repeat(4,1fr)}
-      header{padding: var(--space-4) 0}
-      nav a{margin-left:24px}
-    }
-
-    /* Accessibility focus */
-    :focus{outline:3px solid rgba(11,114,133,0.14); outline-offset:3px}
-  </style>
+  </script>
 </head>
-<body>
-  <div class="wrap">
-    <header>
-      <div class="brand" aria-label="Brand">
-        <div class="logo" aria-hidden="true">CR</div>
-        <div>
-          <div style="font-weight:700">Clive Rodrigues — Design</div>
-          <div style="font-size:0.82rem;color:var(--muted)">E-commerce & brand websites</div>
-        </div>
+
+<body class="bg-neutral-50 text-neutral-900 antialiased">
+
+<!-- NAV -->
+<header class="border-b bg-white">
+  <div class="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="h-10 w-10 rounded-lg bg-brand text-white font-bold flex items-center justify-center">
+        CR
+      </div>
+      <div>
+        <p class="font-semibold leading-tight">Clive Rodrigues</p>
+        <p class="text-sm text-neutral-500">DTC Growth & Conversion</p>
+      </div>
+    </div>
+
+    <nav class="hidden md:flex gap-8 text-sm text-neutral-600">
+      <a href="#services" class="hover:text-neutral-900">Services</a>
+      <a href="#work" class="hover:text-neutral-900">Work</a>
+      <a href="#process" class="hover:text-neutral-900">Process</a>
+      <a href="#contact" class="hover:text-neutral-900">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO (Float UI style) -->
+<section class="relative overflow-hidden">
+  <div class="mx-auto max-w-7xl px-6 py-20 grid gap-12 lg:grid-cols-2 items-center">
+
+    <div>
+      <span class="inline-flex items-center rounded-full bg-brand/10 px-4 py-1 text-sm font-medium text-brand">
+        Conversion-focused systems
+      </span>
+
+      <h1 class="mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
+        From ad click to checkout —<br>
+        conversion systems for DTC brands
+      </h1>
+
+      <p class="mt-6 text-lg text-neutral-600 max-w-xl">
+        I design and build high-converting websites, funnels, and Meta ad journeys
+        that turn paid traffic into predictable revenue — without agency overhead.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a href="#contact"
+           class="inline-flex items-center justify-center rounded-lg bg-brand px-6 py-3 text-white font-semibold hover:bg-brand/90">
+          Audit my funnel
+        </a>
+        <a href="#work"
+           class="inline-flex items-center justify-center rounded-lg border border-neutral-300 px-6 py-3 font-semibold text-neutral-700 hover:bg-neutral-100">
+          See concepts
+        </a>
+      </div>
+    </div>
+
+    <!-- Visual block -->
+    <div class="relative">
+      <div class="rounded-xl bg-white shadow-lg p-6">
+        <p class="font-semibold">Typical engagement</p>
+        <ul class="mt-4 space-y-3 text-sm text-neutral-600">
+          <li>• Meta ads → dedicated landing page</li>
+          <li>• Guided product selection</li>
+          <li>• Conversion-optimized checkout</li>
+          <li>• AI-assisted personalization</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="bg-white border-t">
+  <div class="mx-auto max-w-7xl px-6 py-20">
+    <div class="max-w-2xl">
+      <h2 class="text-3xl font-bold">Revenue systems I build</h2>
+      <p class="mt-4 text-neutral-600">
+        Each service is designed to remove friction between traffic and purchase.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
+      <div class="rounded-xl border bg-neutral-50 p-6">
+        <h3 class="font-semibold text-lg">E-commerce Website Design</h3>
+        <p class="mt-3 text-sm text-neutral-600">
+          Conversion-first Shopify and custom storefronts focused on clarity,
+          speed, and trust — not visual noise.
+        </p>
       </div>
 
-      <nav aria-label="Primary">
-        <a href="#services">Services</a>
-        <a href="#work">Selected work</a>
-        <a href="#process">Process</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+      <div class="rounded-xl border bg-neutral-50 p-6">
+        <h3 class="font-semibold text-lg">Meta Ads & Landing Alignment</h3>
+        <p class="mt-3 text-sm text-neutral-600">
+          Facebook & Instagram ad structure paired with post-click landing pages
+          that match intent and improve ROAS.
+        </p>
+      </div>
 
-    <main>
-      <!-- HERO -->
-      <section class="hero" id="home" aria-labelledby="hero-heading">
-        <div class="hero-grid">
-          <span class="kicker">Focused on conversions</span>
-          <h1 id="hero-heading">Get a website that sells — e-commerce & brand sites for growing DTC businesses</h1>
-          <p class="lead">I design and build fast, conversion-focused stores and brand websites that reduce checkout friction, lift average order value, and present your product the way customers expect to buy.</p>
+      <div class="rounded-xl border bg-neutral-50 p-6">
+        <h3 class="font-semibold text-lg">AI-Assisted Funnels</h3>
+        <p class="mt-3 text-sm text-neutral-600">
+          Smart funnels that adapt messaging, product order, and recommendations
+          based on user behavior.
+        </p>
+      </div>
 
-          <div class="hero-ctas" role="group" aria-label="Primary actions">
-            <a class="btn btn-primary" href="mailto:hello@yourdomain.com?subject=Website%20Inquiry" aria-label="Get a website that sells">Get a website that sells</a>
-            <a class="btn btn-ghost" href="#work">See selected work</a>
-          </div>
+      <div class="rounded-xl border bg-neutral-50 p-6">
+        <h3 class="font-semibold text-lg">Checkout Optimization</h3>
+        <p class="mt-3 text-sm text-neutral-600">
+          Reduce drop-offs with simplified checkout flows, trust stacking,
+          and friction removal.
+        </p>
+      </div>
 
-          <div style="margin-top:var(--space-3); color:var(--muted); font-size:0.92rem">
-            Typical clients: clothing, lifestyle, beauty, and consumer brands. Project types: full e-commerce builds, product launches, redesigns focused on conversion and speed.
-          </div>
-        </div>
+      <div class="rounded-xl border bg-neutral-50 p-6">
+        <h3 class="font-semibold text-lg">Product Discovery UX</h3>
+        <p class="mt-3 text-sm text-neutral-600">
+          Guided flows, bundles, and upsells that increase AOV without
+          overwhelming buyers.
+        </p>
+      </div>
 
-        <aside style="padding:0 var(--container-pad);">
-          <div style="background:var(--card); border-radius:14px; padding:18px; box-shadow:var(--shadow-soft)">
-            <div style="font-weight:700">Quick project snapshot</div>
-            <div style="color:var(--muted); margin-top:8px">Launch ready store with optimized product pages, simplified checkout, and a brand-led homepage — typically delivered in 4–8 weeks depending on scope.</div>
+      <div class="rounded-xl border bg-neutral-50 p-6">
+        <h3 class="font-semibold text-lg">Iteration & Growth Support</h3>
+        <p class="mt-3 text-sm text-neutral-600">
+          Post-launch improvements based on real user behavior, not guesswork.
+        </p>
+      </div>
 
-            <div style="margin-top:14px; display:flex; gap:8px">
-              <a class="btn btn-primary" href="mailto:hello@yourdomain.com?subject=Schedule%20consult" style="padding:10px 12px; font-size:0.95rem">Book a consult</a>
-              <a class="btn btn-ghost" href="https://wa.me/919075957477" aria-label="Chat on WhatsApp">Message on WhatsApp</a>
-            </div>
-          </div>
-        </aside>
-      </section>
-
-      <!-- SERVICES -->
-      <section id="services" aria-labelledby="services-heading">
-        <div class="section-title">
-          <h2 id="services-heading" class="h2">Services — outcomes I deliver</h2>
-          <div class="small">Clear deliverables, no agency overhead</div>
-        </div>
-
-        <div class="grid services-grid" role="list">
-          <article class="service" role="listitem" aria-labelledby="s-ecom">
-            <h3 id="s-ecom">Full E‑commerce Stores</h3>
-            <p>Launch a fast, conversion-first store with product pages, collections, CMS, and checkout optimizations. I handle design, front-end build, and merchant setup so you can sell from day one.</p>
-          </article>
-
-          <article class="service" role="listitem" aria-labelledby="s-conv">
-            <h3 id="s-conv">Conversion Optimization</h3>
-            <p>Redesign product pages and checkout flows to reduce drop-off. Clear hierarchy, persuasive microcopy, and simplified options to improve purchase decisions and average order value.</p>
-          </article>
-
-          <article class="service" role="listitem" aria-labelledby="s-brand">
-            <h3 id="s-brand">Brand & Visual Design</h3>
-            <p>Brand-led homepages and product presentation that build trust and highlight what makes your product desirable — photography guidance, layout systems, and component libraries.</p>
-          </article>
-
-          <article class="service" role="listitem" aria-labelledby="s-perf">
-            <h3 id="s-perf">Performance & SEO</h3>
-            <p>Fast-loading templates, semantic markup, accessible structure, and on-page SEO to improve discoverability and reduce bounce — all built with performance in mind.</p>
-          </article>
-
-          <article class="service" role="listitem" aria-labelledby="s-ux">
-            <h3 id="s-ux">UX for Product Discovery</h3>
-            <p>Category and product filters, cross-sell sections, and intuitive navigation that shorten the path to purchase and surface complementary products at the right time.</p>
-          </article>
-
-          <article class="service" role="listitem" aria-labelledby="s-support">
-            <h3 id="s-support">Ongoing Support & Iteration</h3>
-            <p>Post-launch support, A/B test recommendations, and iterative improvements focused on metrics that matter — conversions, AOV, and cart completion.</p>
-          </article>
-        </div>
-      </section>
-
-      <!-- SELECTED WORK -->
-      <section id="work" aria-labelledby="work-heading">
-        <div class="section-title">
-          <h2 id="work-heading" class="h2">Selected work — concepts & demos</h2>
-          <div class="small">Real design concepts demonstrating conversion-driven solutions</div>
-        </div>
-
-        <div class="grid work-grid" role="list" aria-live="polite" style="margin-top:var(--space-3)">
-          <!-- Project 1 -->
-          <article class="project" role="listitem">
-            <div class="thumb" aria-hidden="true">Riviera</div>
-            <div>
-              <h4>Riviera Apparel — DTC clothing concept (sample)</h4>
-              <div class="meta">Problem: High browse-to-cart friction for seasonal collections. Solution: Improved product hierarchy, size guidance, simplified variant selection. Deliverables: homepage, product, cart templates, component library.</div>
-            </div>
-          </article>
-
-          <!-- Project 2 -->
-          <article class="project" role="listitem">
-            <div class="thumb" aria-hidden="true">Maison</div>
-            <div>
-              <h4>Maison & Co. — Home goods concept (sample)</h4>
-              <div class="meta">Problem: Low conversion on hero product launches. Solution: Focused hero with social proof, product bundles, and staggered CTAs to increase average order value.</div>
-            </div>
-          </article>
-
-          <!-- Project 3 -->
-          <article class="project" role="listitem">
-            <div class="thumb" aria-hidden="true">Bloom</div>
-            <div>
-              <h4>Bloom & Curate — Beauty brand demo (sample)</h4>
-              <div class="meta">Problem: Confusing product options slowed checkout. Solution: Guided product selector, streamlined checkout, and a loyalty strip that improved repeat purchase clarity.</div>
-            </div>
-          </article>
-
-          <!-- Project 4 -->
-          <article class="project" role="listitem">
-            <div class="thumb" aria-hidden="true">QuickCart</div>
-            <div>
-              <h4>QuickCart — Fast checkout concept (sample)</h4>
-              <div class="meta">Problem: Cart abandonment from long checkout flows. Solution: Minimalist one-step checkout with saved-cart messaging and clear trust markers for faster completion.</div>
-            </div>
-          </article>
-        </div>
-
-        <div style="margin-top:var(--space-3); color:var(--muted); font-size:0.92rem">
-          Note: these are concept projects and demos meant to show approach and outcomes. I can adapt the same patterns to your brand and product set.
-        </div>
-      </section>
-
-      <!-- PROCESS -->
-      <section id="process" aria-labelledby="process-heading">
-        <div class="section-title">
-          <h2 id="process-heading" class="h2">Process — clear steps, predictable timelines</h2>
-          <div class="small">Designed for clarity and quick decision-making</div>
-        </div>
-
-        <div class="grid steps" style="margin-top:var(--space-3)">
-          <div class="step">
-            <div class="n">01</div>
-            <div>
-              <strong>Strategy & brief</strong>
-              <div class="small" style="margin-top:6px">We define goals, KPIs, product priorities, and launch scope in a short, actionable brief so nothing is ambiguous.</div>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="n">02</div>
-            <div>
-              <strong>Design</strong>
-              <div class="small" style="margin-top:6px">Wireframes and high-fidelity pages focused on product presentation, trust signals, and conversion paths for review and feedback.</div>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="n">03</div>
-            <div>
-              <strong>Build</strong>
-              <div class="small" style="margin-top:6px">Fast front-end implementation with performance and accessibility in mind. Staging review and merchant platform setup included.</div>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="n">04</div>
-            <div>
-              <strong>Launch & iterate</strong>
-              <div class="small" style="margin-top:6px">Launch, validate metrics, and prioritize follow-up improvements based on real user data — short iterations with clear outcomes.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- WHY CHOOSE ME -->
-      <section id="why" aria-labelledby="why-heading">
-        <div class="section-title">
-          <h2 id="why-heading" class="h2">Why work with a solo designer</h2>
-          <div class="small">Less overhead, more focus on outcomes</div>
-        </div>
-
-        <div class="grid why" style="margin-top:var(--space-3)">
-          <div>
-            <blockquote style="margin:0; padding:12px 16px; border-left:4px solid var(--accent); background:rgba(11,114,133,0.03); border-radius:8px">
-              <strong>Direct line to the person doing the work.</strong>
-              <div style="color:var(--muted); margin-top:8px">You get consistent decisions, faster turnarounds, and one point of accountability for both design and delivery.</div>
-            </blockquote>
-          </div>
-
-          <div class="why-list">
-            <div style="display:flex; gap:10px; align-items:flex-start">
-              <div style="width:10px;height:10px;border-radius:3px;background:var(--accent);margin-top:6px"></div>
-              <div>
-                <strong>Fast turnaround</strong>
-                <div class="small">Streamlined process and fixed-scope packages reduce back-and-forth and speed to market.</div>
-              </div>
-            </div>
-
-            <div style="display:flex; gap:10px; align-items:flex-start">
-              <div style="width:10px;height:10px;border-radius:3px;background:var(--accent);margin-top:6px"></div>
-              <div>
-                <strong>No agency overhead</strong>
-                <div class="small">You pay for design and build, not account management layers or excess meetings.</div>
-              </div>
-            </div>
-
-            <div style="display:flex; gap:10px; align-items:flex-start">
-              <div style="width:10px;height:10px;border-radius:3px;background:var(--accent);margin-top:6px"></div>
-              <div>
-                <strong>Metrics-driven</strong>
-                <div class="small">Design decisions are tied to clear outcomes: conversion, AOV, and checkout completion.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- CONTACT -->
-      <section id="contact" aria-labelledby="contact-heading">
-        <div class="section-title">
-          <h2 id="contact-heading" class="h2">Contact — start with a short consult</h2>
-          <div class="small">Quick 20-minute call to scope priorities and timelines</div>
-        </div>
-
-        <div style="margin-top:var(--space-3)">
-          <div class="contact-card">
-            <div style="min-width:0">
-              <div style="font-weight:700">Email</div>
-              <div class="small" style="margin-top:6px">
-                <a href="rodriguesclive8@gmail.com">rodriguesclive8@gmail.com</a>
-              </div>
-            </div>
-
-            <div style="min-width:0">
-              <div style="font-weight:700">WhatsApp</div>
-              <div class="small" style="margin-top:6px">
-                <a href="https://www.instagram.com/clive.rds/" aria-label="Insta">clive.rds</a>
-              </div>
-            </div>
-
-            <div style="flex:1; min-width:200px; text-align:right">
-              <div style="font-weight:700">Ready to get started?</div>
-              <div class="small" style="margin-top:6px">Reply with a short note about your product, traffic, and timeline — I’ll respond within one business day.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer style="margin-top:var(--space-4);">
-        <div class="small">© <span id="year"></span> Clive Rodrigues — Design. All rights reserved.</div>
-      </footer>
-    </main>
+    </div>
   </div>
+</section>
 
-  <script>
-    // Lightweight script only to set current year and no heavy runtime.
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+<!-- WORK -->
+<section id="work" class="border-t">
+  <div class="mx-auto max-w-7xl px-6 py-20">
+    <h2 class="text-3xl font-bold">Selected concepts & demos</h2>
+
+    <div class="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+      <div class="rounded-xl border p-6">
+        <h3 class="font-semibold">Riviera Apparel</h3>
+        <p class="mt-2 text-sm text-neutral-600">
+          Ad-specific landing + product hierarchy to reduce browse-to-cart friction.
+        </p>
+      </div>
+
+      <div class="rounded-xl border p-6">
+        <h3 class="font-semibold">Maison Home Goods</h3>
+        <p class="mt-2 text-sm text-neutral-600">
+          Hero-led funnel with bundles and staggered CTAs to increase AOV.
+        </p>
+      </div>
+
+      <div class="rounded-xl border p-6">
+        <h3 class="font-semibold">Fast Checkout Concept</h3>
+        <p class="mt-2 text-sm text-neutral-600">
+          One-step checkout flow designed to reduce abandonment from paid traffic.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="bg-white border-t">
+  <div class="mx-auto max-w-7xl px-6 py-20">
+    <h2 class="text-3xl font-bold">How projects run</h2>
+
+    <div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 text-sm">
+      <div>
+        <p class="font-semibold">01. Strategy</p>
+        <p class="mt-2 text-neutral-600">Goals, funnel gaps, and priorities defined.</p>
+      </div>
+      <div>
+        <p class="font-semibold">02. Design</p>
+        <p class="mt-2 text-neutral-600">Wireframes & high-fidelity layouts.</p>
+      </div>
+      <div>
+        <p class="font-semibold">03. Build</p>
+        <p class="mt-2 text-neutral-600">Fast, clean, performance-first build.</p>
+      </div>
+      <div>
+        <p class="font-semibold">04. Launch & Iterate</p>
+        <p class="mt-2 text-neutral-600">Ship, measure, refine.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="border-t">
+  <div class="mx-auto max-w-7xl px-6 py-20 text-center">
+    <h2 class="text-3xl font-bold">Start with a short consult</h2>
+    <p class="mt-4 text-neutral-600">
+      Share your product, traffic source, and goals — I’ll tell you what’s broken.
+    </p>
+
+    <div class="mt-8 flex justify-center gap-4 flex-wrap">
+      <a href="mailto:hello@yourdomain.com"
+         class="rounded-lg bg-brand px-6 py-3 text-white font-semibold hover:bg-brand/90">
+        Email me
+      </a>
+      <a href="https://wa.me/15551234567"
+         class="rounded-lg border border-neutral-300 px-6 py-3 font-semibold text-neutral-700 hover:bg-neutral-100">
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t py-6 text-center text-sm text-neutral-500">
+  © <span id="year"></span> Clive Rodrigues
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
 </body>
 </html>
