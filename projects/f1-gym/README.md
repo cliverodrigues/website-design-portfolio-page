@@ -22,6 +22,13 @@ python play.py --model models/best_model.zip --export ../../assets/f1-lap.json
 
 The last command replaces the replay shown on the website with your agent's run.
 
+## Results
+
+| Driver | Best lap | Top speed |
+|---|---|---|
+| `gap_follower` baseline | 37.3 s | 217 km/h |
+| PPO, 300k steps (under 3 min on CPU) | **23.9 s** | 273 km/h |
+
 ## The environment
 
 | | |

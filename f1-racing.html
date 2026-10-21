@@ -162,7 +162,7 @@
               <button class="btn btn-ghost" type="button" data-rate="4" aria-pressed="false">4×</button>
             </div>
             <div class="legend" style="margin-top:14px"><span>slow</span><span class="bar"></span><span>fast</span></div>
-            <p class="small" style="margin-top:10px">This is a replay of a real run, exported from Python with <code>play.py --export</code>. Nothing is simulated in the browser.</p>
+            <p class="small" style="margin-top:10px">This is a replay of the trained PPO agent, exported from Python with <code>play.py --export</code>. Nothing is simulated in the browser.</p>
           </div>
         </div>
       </section>
@@ -233,8 +233,9 @@ obs, info = env.reset(seed=<span class="s">0</span>)
               <tbody id="results-body">
                 <tr><td>Circuit length</td><td class="num">1,535 m</td></tr>
                 <tr><td>Simulation speed (single core)</td><td class="num">~5,300 steps/s</td></tr>
-                <tr><td>Baseline “gap follower” best lap</td><td class="num">37.3 s</td></tr>
-                <tr><td>Baseline top speed</td><td class="num">217 km/h</td></tr>
+                <tr><td>Baseline “gap follower” best lap · top speed</td><td class="num">37.3 s · 217 km/h</td></tr>
+                <tr><td><strong>PPO agent best lap · top speed</strong></td><td class="num"><strong>23.9 s · 273 km/h</strong></td></tr>
+                <tr><td>PPO training (300k steps, 4 envs, CPU only)</td><td class="num">under 3 min</td></tr>
               </tbody>
             </table>
           </article>

@@ -1,7 +1,7 @@
 """Train a PPO agent to drive the F1 track.
 
 Usage:
-    python train.py                      # 300k steps, ~10-15 min on a laptop CPU
+    python train.py                      # 300k steps, a few minutes on a laptop CPU
     python train.py --timesteps 1000000  # longer run, faster lap times
 
 Why CPU and not the GPU? The policy is a tiny MLP (two layers of 64 units),
