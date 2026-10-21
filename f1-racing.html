@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>F1 Racing Agent — Python & Gymnasium | Clive Rodrigues</title>
+  <meta name="description" content="A custom Gymnasium reinforcement-learning environment where an F1-style car learns to lap a circuit. Built in Python with NumPy and Stable Baselines3." />
+  <style>
+    /* Same tokens as index.html, plus a racing red for the simulation */
+    :root{
+      --bg: #fbfbf9;
+      --card: #ffffff;
+      --text: #0f1720;
+      --muted: #4b5563;
+      --accent: #0b7285;
+      --accent-contrast: #ffffff;
+      --race: #e10600;
+      --asphalt: #2b2f36;
+      --radius: 12px;
+
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 40px;
+      --space-5: 64px;
+
+      --max-width: 1100px;
+      --container-pad: 20px;
+      --shadow-soft: 0 6px 18px rgba(16,24,32,0.06);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      line-height:1.45;
+      -webkit-font-smoothing:antialiased;
+      padding-bottom:var(--space-5);
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max-width); margin:0 auto; padding:0 var(--container-pad)}
+
+    header{padding:var(--space-3) 0; display:flex; align-items:center; justify-content:space-between; gap:12px}
+    .brand{display:flex; align-items:center; gap:12px; font-weight:600; font-size:0.98rem}
+    .logo{
+      width:40px; height:40px; display:inline-grid; place-items:center;
+      background:linear-gradient(180deg,var(--accent), #057985);
+      color:var(--accent-contrast); border-radius:8px; font-weight:700; box-shadow:var(--shadow-soft);
+    }
+    nav a{font-size:0.95rem; color:var(--muted); margin-left:18px}
+
+    section{padding:var(--space-4) 0; border-top:1px solid rgba(15,23,32,0.03)}
+    .kicker{
+      display:inline-block; background:rgba(225,6,0,0.08); color:var(--race);
+      padding:6px 10px; border-radius:999px; font-size:0.85rem; font-weight:600;
+    }
+    h1{margin:12px 0 0; font-size:1.6rem; line-height:1.1; letter-spacing:-0.01em}
+    .lead{margin:12px 0 0; color:var(--muted); max-width:66ch}
+    .h2{font-size:1.1rem; font-weight:700; margin:0}
+    .small{font-size:0.9rem; color:var(--muted)}
+    .section-title{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap}
+
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; font-weight:600; cursor:pointer; border:0; font:inherit; font-weight:600}
+    .btn-primary{background:var(--accent); color:var(--accent-contrast)}
+    .btn-ghost{background:var(--card); color:var(--text); border:1px solid rgba(15,23,32,0.1)}
+    .btn-ghost[aria-pressed="true"]{border-color:var(--race); color:var(--race)}
+
+    /* Simulator */
+    .sim{display:grid; gap:var(--space-3); margin-top:var(--space-3)}
+    .stage{
+      background:#1b1e23; border-radius:var(--radius); box-shadow:var(--shadow-soft);
+      position:relative; overflow:hidden; aspect-ratio: 1 / 1; max-height:560px;
+    }
+    .stage canvas{width:100%; height:100%; display:block}
+    .stage .msg{position:absolute; inset:0; display:grid; place-items:center; color:#cfd3da; padding:24px; text-align:center}
+    .hud{display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
+    .stat{background:var(--card); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow-soft)}
+    .stat .v{font-family:var(--mono); font-size:1.5rem; font-weight:700; font-variant-numeric:tabular-nums}
+    .stat .l{font-size:0.82rem; color:var(--muted)}
+    .controls{display:flex; gap:8px; flex-wrap:wrap; margin-top:4px}
+    .legend{display:flex; align-items:center; gap:8px; font-size:0.82rem; color:var(--muted)}
+    .legend .bar{flex:1; height:8px; border-radius:4px; background:linear-gradient(90deg,#2f80ed,#f2c94c,#e10600)}
+
+    /* Cards */
+    .grid{display:grid; gap:var(--space-3); margin-top:var(--space-3)}
+    .card{background:var(--card); border-radius:var(--radius); padding:var(--space-3); box-shadow:var(--shadow-soft)}
+    .card h3{margin:0 0 8px; font-size:1rem}
+    .card p, .card li{margin:0; color:var(--muted); font-size:0.95rem}
+    .card ul{margin:0; padding-left:18px; display:grid; gap:4px}
+    code{font-family:var(--mono); font-size:0.88em; background:rgba(15,23,32,0.05); padding:1px 5px; border-radius:4px}
+    pre{
+      margin:var(--space-3) 0 0; background:#14171c; color:#e6e9ef; border-radius:var(--radius);
+      padding:18px 20px; overflow-x:auto; font-family:var(--mono); font-size:0.86rem; line-height:1.6;
+    }
+    pre .c{color:#7d8794} pre .k{color:#ff7b72} pre .s{color:#a5d6ff}
+
+    table{width:100%; border-collapse:collapse; font-size:0.95rem}
+    th, td{text-align:left; padding:10px 8px; border-bottom:1px solid rgba(15,23,32,0.06)}
+    th{color:var(--muted); font-weight:600; font-size:0.85rem}
+    td.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+    footer{margin-top:var(--space-4); text-align:center}
+
+    @media (min-width:720px){
+      h1{font-size:2.1rem}
+      .sim{grid-template-columns: 1fr 280px; align-items:start}
+      .hud{grid-template-columns:1fr}
+      .cards-4{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (min-width:1024px){
+      .wrap{padding:0 32px}
+      .cards-4{grid-template-columns:repeat(4,1fr)}
+      nav a{margin-left:24px}
+    }
+    @media (max-width:520px){ nav a:not(:first-child){display:none} }
+    :focus-visible{outline:3px solid rgba(11,114,133,0.3); outline-offset:3px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="index.html" aria-label="Back to home">
+        <div class="logo" aria-hidden="true">CR</div>
+        <div>
+          <div style="font-weight:700">Clive Rodrigues</div>
+          <div style="font-size:0.82rem;color:var(--muted)">Python lab</div>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html#work">← All work</a>
+        <a href="#how">How it works</a>
+        <a href="#results">Results</a>
+      </nav>
+    </header>
+
+    <main>
+      <section style="border-top:0; padding-top:var(--space-2)" aria-labelledby="title">
+        <span class="kicker">Python · Gymnasium · Reinforcement learning</span>
+        <h1 id="title">F1 Racing Agent — teaching a car to lap a circuit</h1>
+        <p class="lead">A custom <strong>Gymnasium</strong> environment I built from scratch in Python and NumPy. An F1-style car reads the track through seven distance sensors and decides how to steer, accelerate and brake. A PPO agent from Stable Baselines3 learns to drive it by trial and error.</p>
+
+        <div class="sim">
+          <div class="stage" id="stage">
+            <canvas id="track" role="img" aria-label="Replay of the car lapping the circuit, coloured by speed"></canvas>
+            <div class="msg" id="msg" hidden></div>
+          </div>
+
+          <div>
+            <div class="hud" aria-live="off">
+              <div class="stat"><div class="v" id="speed">0</div><div class="l">km/h</div></div>
+              <div class="stat"><div class="v" id="lap">1 / 3</div><div class="l">Lap</div></div>
+              <div class="stat"><div class="v" id="time">0.0</div><div class="l">Lap time (s)</div></div>
+              <div class="stat"><div class="v" id="best">—</div><div class="l">Best lap (s)</div></div>
+            </div>
+            <div class="controls" style="margin-top:12px">
+              <button class="btn btn-primary" id="play" type="button">Pause</button>
+              <button class="btn btn-ghost" type="button" data-rate="1" aria-pressed="true">1×</button>
+              <button class="btn btn-ghost" type="button" data-rate="2" aria-pressed="false">2×</button>
+              <button class="btn btn-ghost" type="button" data-rate="4" aria-pressed="false">4×</button>
+            </div>
+            <div class="legend" style="margin-top:14px"><span>slow</span><span class="bar"></span><span>fast</span></div>
+            <p class="small" style="margin-top:10px">This is a replay of a real run, exported from Python with <code>play.py --export</code>. Nothing is simulated in the browser.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="how" aria-labelledby="how-heading">
+        <div class="section-title">
+          <h2 id="how-heading" class="h2">How the environment works</h2>
+          <div class="small">Standard Gymnasium API: <code>reset()</code> → <code>step(action)</code></div>
+        </div>
+
+        <div class="grid cards-4">
+          <article class="card">
+            <h3>Observation — 10 numbers</h3>
+            <ul>
+              <li>7 sensor rays (−90° … +90°) measuring distance to the track edge</li>
+              <li>Current speed</li>
+              <li>Heading error vs. the track direction</li>
+              <li>Offset from the centre line</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Action — 2 numbers</h3>
+            <ul>
+              <li>Steering, −1 (right) to +1 (left)</li>
+              <li>Pedal, −1 (full brake) to +1 (full throttle)</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Reward</h3>
+            <ul>
+              <li>+0.1 per metre of progress along the track</li>
+              <li>−0.01 per step, so slower laps score less</li>
+              <li>−10 for leaving the track, which ends the episode</li>
+              <li>+50 per completed lap</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Physics</h3>
+            <p>A kinematic bicycle model with a ~3.5 g tyre-grip limit. If the car enters a corner too fast it understeers wide, so the agent has to learn to <em>brake before the turn</em>. That is the core skill of racing.</p>
+          </article>
+        </div>
+
+<pre aria-label="Python usage example"><span class="k">import</span> gymnasium <span class="k">as</span> gym
+<span class="k">import</span> f1_gym  <span class="c"># registers "F1Track-v0"</span>
+
+env = gym.make(<span class="s">"F1Track-v0"</span>)
+obs, info = env.reset(seed=<span class="s">0</span>)
+
+<span class="k">while True</span>:
+    action = env.action_space.sample()   <span class="c"># or: model.predict(obs)</span>
+    obs, reward, terminated, truncated, info = env.step(action)
+    <span class="k">if</span> terminated <span class="k">or</span> truncated:
+        <span class="k">break</span>
+
+<span class="k">print</span>(info[<span class="s">"lap_times"</span>], info[<span class="s">"speed_kph"</span>])</pre>
+      </section>
+
+      <section id="results" aria-labelledby="results-heading">
+        <div class="section-title">
+          <h2 id="results-heading" class="h2">Engineering notes & results</h2>
+          <div class="small">Built to train fast on a laptop CPU, no GPU needed</div>
+        </div>
+
+        <div class="grid cards-4" style="grid-template-columns:1fr">
+          <article class="card">
+            <table>
+              <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+              <tbody id="results-body">
+                <tr><td>Circuit length</td><td class="num">1,535 m</td></tr>
+                <tr><td>Simulation speed (single core)</td><td class="num">~5,300 steps/s</td></tr>
+                <tr><td>Baseline “gap follower” best lap</td><td class="num">37.3 s</td></tr>
+                <tr><td>Baseline top speed</td><td class="num">217 km/h</td></tr>
+              </tbody>
+            </table>
+          </article>
+        </div>
+
+        <div class="grid cards-4">
+          <article class="card">
+            <h3>Vectorised geometry</h3>
+            <p>Sensor rays are intersected exactly with the track edges using 2D cross products in NumPy, with no Python loops. That made each step about 18× faster than my first ray-marching version.</p>
+          </article>
+          <article class="card">
+            <h3>Local search</h3>
+            <p>Each step only tests the stretch of track near the car, not all 400 segments. This keeps the cost per step flat however long the circuit is.</p>
+          </article>
+          <article class="card">
+            <h3>Progress, not speed</h3>
+            <p>The reward pays for metres along the centre line, so the agent can't exploit it by spinning in circles or driving backwards.</p>
+          </article>
+          <article class="card">
+            <h3>Tested</h3>
+            <p>It passes Gymnasium's <code>check_env</code>. Pytest covers seeding, crash detection, sensor sanity checks and a full baseline lap.</p>
+          </article>
+        </div>
+      </section>
+
+      <footer>
+        <a class="btn btn-ghost" href="index.html">← Back to portfolio</a>
+        <div class="small" style="margin-top:16px">© <span id="year"></span> Clive Rodrigues. Source in <code>projects/f1-gym</code>.</div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    (function () {
+      const canvas = document.getElementById('track');
+      const ctx = canvas.getContext('2d');
+      const msg = document.getElementById('msg');
+      const el = id => document.getElementById(id);
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let data = null;
+      let lapEnds = []; // frame index at which each lap finishes
+      let frame = 0;
+      let rate = 1;
+      let playing = !reduceMotion;
+      let last = null;
+      let acc = 0;
+      let view = null; // world -> canvas transform
+
+      function showMessage (text) {
+        msg.textContent = text;
+        msg.hidden = false;
+      }
+
+      // Speed → colour: blue (slow) → yellow → red (fast)
+      function speedColor (kph, maxKph) {
+        const t = Math.max(0, Math.min(1, kph / maxKph));
+        const stops = [[47, 128, 237], [242, 201, 76], [225, 6, 0]];
+        const seg = t < 0.5 ? 0 : 1;
+        const f = t < 0.5 ? t * 2 : (t - 0.5) * 2;
+        const c = stops[seg].map((v, i) => Math.round(v + (stops[seg + 1][i] - v) * f));
+        return `rgb(${c[0]},${c[1]},${c[2]})`;
+      }
+
+      function resize () {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.round(rect.width * dpr);
+        canvas.height = Math.round(rect.height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (!data) return;
+        const xs = data.track.map(p => p[0]);
+        const ys = data.track.map(p => p[1]);
+        const pad = data.track_width + 10;
+        const minX = Math.min(...xs) - pad; const maxX = Math.max(...xs) + pad;
+        const minY = Math.min(...ys) - pad; const maxY = Math.max(...ys) + pad;
+        const s = Math.min(rect.width / (maxX - minX), rect.height / (maxY - minY));
+        view = {
+          s,
+          ox: (rect.width - (maxX - minX) * s) / 2 - minX * s,
+          // flip y so the maths convention (y up) matches the Python plot
+          oy: (rect.height + (maxY - minY) * s) / 2 + minY * s
+        };
+        draw();
+      }
+
+      const toX = x => view.ox + x * view.s;
+      const toY = y => view.oy - y * view.s;
+
+      function drawTrack () {
+        const t = data.track;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        const path = () => {
+          ctx.beginPath();
+          t.forEach((p, i) => (i ? ctx.lineTo(toX(p[0]), toY(p[1])) : ctx.moveTo(toX(p[0]), toY(p[1]))));
+          ctx.closePath();
+        };
+        // kerbs, then asphalt, then the dashed centre line
+        path(); ctx.strokeStyle = '#d8dbe0'; ctx.lineWidth = (data.track_width + 2) * view.s; ctx.stroke();
+        path(); ctx.strokeStyle = '#3a3f47'; ctx.lineWidth = data.track_width * view.s; ctx.stroke();
+        path(); ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; ctx.setLineDash([6, 8]); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // start / finish line
+        const a = t[0]; const b = t[1];
+        const dx = b[0] - a[0]; const dy = b[1] - a[1];
+        const len = Math.hypot(dx, dy);
+        const nx = -dy / len * data.track_width / 2; const ny = dx / len * data.track_width / 2;
+        ctx.beginPath();
+        ctx.moveTo(toX(a[0] + nx), toY(a[1] + ny));
+        ctx.lineTo(toX(a[0] - nx), toY(a[1] - ny));
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.stroke();
+      }
+
+      function draw () {
+        const rect = canvas.getBoundingClientRect();
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        if (!data || !view) return;
+        drawTrack();
+
+        // The trail covers the current lap only, coloured by speed
+        const f = data.frames;
+        const lapIdx = lapEnds.findIndex(e => frame <= e);
+        const lapStart = lapIdx > 0 ? lapEnds[lapIdx - 1] : 0;
+        ctx.lineWidth = Math.max(2, view.s * 2);
+        for (let i = lapStart + 1; i <= frame; i++) {
+          ctx.beginPath();
+          ctx.moveTo(toX(f[i - 1][0]), toY(f[i - 1][1]));
+          ctx.lineTo(toX(f[i][0]), toY(f[i][1]));
+          ctx.strokeStyle = speedColor(f[i][2], data.maxKph);
+          ctx.stroke();
+        }
+
+        // Car: a small arrow pointing along the direction of travel
+        const p = f[frame];
+        const q = f[Math.min(frame + 1, f.length - 1)];
+        const prev = f[Math.max(frame - 1, 0)];
+        const ang = Math.atan2(-(q[1] - prev[1]), q[0] - prev[0]);
+        ctx.save();
+        ctx.translate(toX(p[0]), toY(p[1]));
+        ctx.rotate(ang);
+        const sz = Math.max(7, view.s * 5);
+        ctx.beginPath();
+        ctx.moveTo(sz, 0); ctx.lineTo(-sz * 0.7, sz * 0.55); ctx.lineTo(-sz * 0.7, -sz * 0.55);
+        ctx.closePath();
+        ctx.fillStyle = '#e10600'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
+        ctx.fill(); ctx.stroke();
+        ctx.restore();
+
+        // HUD
+        const lap = lapIdx === -1 ? lapEnds.length : lapIdx + 1;
+        el('speed').textContent = Math.round(p[2]);
+        el('lap').textContent = `${Math.min(lap, data.lap_times.length)} / ${data.lap_times.length}`;
+        el('time').textContent = ((frame - lapStart) * data.dt).toFixed(1);
+        const done = data.lap_times.filter((_, i) => lapEnds[i] <= frame);
+        el('best').textContent = done.length ? Math.min(...done).toFixed(1) : '—';
+      }
+
+      function tick (now) {
+        if (last === null) last = now;
+        const elapsed = Math.min(now - last, 100) / 1000; // clamp after tab switches
+        last = now;
+        if (playing && data) {
+          acc += elapsed * rate;
+          const steps = Math.floor(acc / data.dt);
+          if (steps > 0) {
+            acc -= steps * data.dt;
+            frame += steps;
+            if (frame >= data.frames.length) frame = 0; // loop the replay
+            draw();
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+
+      el('play').textContent = playing ? 'Pause' : 'Play';
+      el('play').addEventListener('click', () => {
+        playing = !playing;
+        el('play').textContent = playing ? 'Pause' : 'Play';
+      });
+      document.querySelectorAll('[data-rate]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          rate = Number(btn.dataset.rate);
+          document.querySelectorAll('[data-rate]').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+        });
+      });
+      window.addEventListener('resize', resize);
+
+      fetch('assets/f1-lap.json')
+        .then(r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        })
+        .then(json => {
+          data = json;
+          data.maxKph = Math.max(...data.frames.map(f => f[2]));
+          // Rebuild lap boundaries from the lap times
+          let total = 0;
+          lapEnds = data.lap_times.map(t => (total += Math.round(t / data.dt)));
+          resize();
+          requestAnimationFrame(tick);
+        })
+        .catch(err => {
+          // fetch() is blocked on file:// URLs, so suggest a local server
+          showMessage(`Couldn't load the replay (${err.message}). Run a local server, e.g. "python -m http.server", and open this page from it.`);
+        });
+    })();
+  </script>
+</body>
+</html>

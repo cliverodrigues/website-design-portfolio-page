@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+.venv/
+projects/f1-gym/models/
